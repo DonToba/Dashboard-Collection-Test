@@ -1,0 +1,39 @@
+name: Update Building Dashboard
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Merge Script
+        env:
+          KOBO_API: ${{ secrets.KOBO_API }}
+          KOBO_TOKEN: ${{ secrets.KOBO_TOKEN }}
+          BUILDING_FILE: data/building_footprints.geojson
+          OUTPUT_FILE: data/merged_buildings.geojson
+        run: python scripts/main.py
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update merged building data"
+          file_pattern: data/merged_buildings.geojson
