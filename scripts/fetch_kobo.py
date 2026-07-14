@@ -5,20 +5,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-KOBO_API = os.getenv("KOBO_API")
-KOBO_TOKEN = os.getenv("KOBO_TOKEN")
+API = os.getenv("KOBO_API")
+TOKEN = os.getenv("KOBO_TOKEN")
 
 
 def fetch_kobo():
+
     headers = {
-        "Authorization": f"Token {KOBO_TOKEN}"
+        "Authorization": f"Token {TOKEN}"
     }
 
-    response = requests.get(KOBO_API, headers=headers)
+    response = requests.get(API, headers=headers)
+
     response.raise_for_status()
 
     data = response.json()["results"]
 
-    df = pd.json_normalize(data)
-
-    return df
+    return pd.json_normalize(data)
