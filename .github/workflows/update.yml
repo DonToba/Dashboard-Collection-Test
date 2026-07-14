@@ -1,9 +1,10 @@
 name: Update Building Dashboard
 
 on:
-  schedule:
-    - cron: "*/1 * * * *"
   workflow_dispatch:
+
+  schedule:
+    - cron: "*/10 * * * *"   # Every minute (for testing only)
 
 permissions:
   contents: write
@@ -32,7 +33,7 @@ jobs:
           OUTPUT_FILE: data/merged_buildings.geojson
         run: python scripts/main.py
 
-      - name: Commit and Push Changes
+      - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update merged building data"
